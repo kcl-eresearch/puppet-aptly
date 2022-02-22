@@ -132,9 +132,17 @@ define aptly::mirror (
       File['/etc/aptly.conf'],
     ]
   } else {
+    if $key['server'] {
+      $key_import_cmd = "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'"
+    } elsif $key['filepath'] {
+      $key_import_cmd = "${gpg_cmd} --import '${key['filepath']}'"
+    } else {
+      fail('Cannot find key source - filepath or server must be specified')
+    }
+
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
-      command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
+      command => $key_import_cmd,
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
       user    => $::aptly::user,
     }
