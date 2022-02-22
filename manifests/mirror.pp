@@ -73,7 +73,7 @@ define aptly::mirror (
 
   if empty($architectures) {
     $architectures_arg = ''
-  } else{
+  } else {
     $architectures_as_s = join($architectures, ',')
     $architectures_arg = "-architectures=\"${architectures_as_s}\""
   }
@@ -87,13 +87,13 @@ define aptly::mirror (
 
   if empty($filter) {
     $filter_arg = ''
-  } else{
+  } else {
     $filter_arg = " -filter=\"${filter}\""
   }
 
   if ($filter_with_deps == true) {
     $filter_with_deps_arg = ' -filter-with-deps'
-  } else{
+  } else {
     $filter_with_deps_arg = ''
   }
 
@@ -109,12 +109,12 @@ define aptly::mirror (
     }
     if $key[server] {
       $key_server = $key[server]
-    }else{
+    } else {
       $key_server = $::aptly::key_server
     }
 
   # key in string/array format
-  }elsif is_string($key) or is_array($key) {
+  } elsif is_string($key) or is_array($key) {
     $key_server = $::aptly::key_server
     if is_array($key) {
       $key_string = join($key, "' '")
@@ -126,12 +126,12 @@ define aptly::mirror (
   }
 
   # no GPG key
-  if $key.empty {
+  if empty($key) {
     $exec_aptly_mirror_create_require = [
       Package['aptly'],
       File['/etc/aptly.conf'],
     ]
-  }else{
+  } else {
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
       command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
