@@ -99,16 +99,16 @@ define aptly::mirror (
 
   # $::aptly::key_server will be used as default key server
   # key in hash format
-  if is_hash($key) and $key[id] {
-    if is_array($key[id]) {
-      $key_string = join($key[id], "' '")
-    } elsif is_string($key[id]) or is_integer($key[id]) {
-      $key_string = $key[id]
+  if is_hash($key) and $key['id'] {
+    if is_array($key['id']) {
+      $key_string = join($key['id'], "' '")
+    } elsif is_string($key['id']) or is_integer($key['id']) {
+      $key_string = $key['id']
     } else {
       fail('$key[id] is neither a string nor an array!')
     }
-    if $key[server] {
-      $key_server = $key[server]
+    if $key['server'] {
+      $key_server = $key['server']
     } else {
       $key_server = $::aptly::key_server
     }
@@ -123,6 +123,12 @@ define aptly::mirror (
     } else {
       fail('$key is neither a string nor an array!')
     }
+  }
+
+  file {
+    "/tmp/xand_debug_${title}.yaml":
+      ensure => 'file',
+      content => to_yaml($key);
   }
 
   # no GPG key
