@@ -146,6 +146,12 @@ define aptly::mirror (
       fail('Cannot find key source - filepath or server must be specified')
     }
 
+    file {
+      "/tmp/xand_debug_${title}.cmd":
+        ensure => 'file',
+        content => "${key_import_cmd}\n";
+    }
+
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
       command => $key_import_cmd,
