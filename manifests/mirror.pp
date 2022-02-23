@@ -66,7 +66,6 @@ define aptly::mirror (
   Boolean $filter_with_deps  = false,
   Array $environment         = [],
 ) {
-  include ::aptly
 
   $gpg_cmd = "/usr/bin/gpg --no-default-keyring --keyring ${keyring}"
   $aptly_cmd = "${::aptly::aptly_cmd} mirror"
@@ -125,12 +124,6 @@ define aptly::mirror (
     }
   }
 
-  file {
-    "/tmp/xand_debug_${title}.yaml":
-      ensure => 'file',
-      content => to_yaml($key);
-  }
-
   # no GPG key
   if empty($key) {
     $exec_aptly_mirror_create_require = [
@@ -144,12 +137,6 @@ define aptly::mirror (
       $key_import_cmd = "${gpg_cmd} --import '${key['filepath']}'"
     } else {
       fail('Cannot find key source - filepath or server must be specified')
-    }
-
-    file {
-      "/tmp/xand_debug_${title}.cmd":
-        ensure => 'file',
-        content => "${key_import_cmd}\n";
     }
 
     exec { "aptly_mirror_gpg-${title}":
