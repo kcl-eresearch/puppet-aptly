@@ -58,7 +58,7 @@ define aptly::mirror (
   Variant[String, Hash] $key = {},
   String $keyring            = '/etc/apt/trusted.gpg',
   String $filter             = '',
-  String $release            = $::lsbdistcodename,
+  String $release            = $facts['os']['distro']['codename'],
   Array $architectures       = [],
   Array $repos               = [],
   Boolean $with_sources      = false,
@@ -66,14 +66,14 @@ define aptly::mirror (
   Boolean $filter_with_deps  = false,
   Array $environment         = [],
 ) {
-  include ::aptly
+  include aptly
 
   $gpg_cmd = "/usr/bin/gpg --no-default-keyring --keyring ${keyring}"
-  $aptly_cmd = "${::aptly::aptly_cmd} mirror"
+  $aptly_cmd = "${facts['aptly::aptly_cmd']} mirror"
 
   if empty($architectures) {
     $architectures_arg = ''
-  } else{
+  } else {
     $architectures_as_s = join($architectures, ',')
     $architectures_arg = "-architectures=\"${architectures_as_s}\""
   }
@@ -87,13 +87,13 @@ define aptly::mirror (
 
   if empty($filter) {
     $filter_arg = ''
-  } else{
+  } else {
     $filter_arg = " -filter=\"${filter}\""
   }
 
   if ($filter_with_deps == true) {
     $filter_with_deps_arg = ' -filter-with-deps'
-  } else{
+  } else {
     $filter_with_deps_arg = ''
   }
 
@@ -109,13 +109,13 @@ define aptly::mirror (
     }
     if $key[server] {
       $key_server = $key[server]
-    }else{
-      $key_server = $::aptly::key_server
+    }else {
+      $key_server = $aptly::key_server
     }
 
-  # key in string/array format
+    # key in string/array format
   }elsif $key =~ String or $key =~ Array {
-    $key_server = $::aptly::key_server
+    $key_server = $aptly::key_server
     if $key =~ Array {
       $key_string = join($key, "' '")
     } elsif $key =~ String or $key =~ Integer {
@@ -136,7 +136,7 @@ define aptly::mirror (
       path    => '/bin:/usr/bin',
       command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
-      user    => $::aptly::user,
+      user    => $aptly::user,
     }
 
     $exec_aptly_mirror_create_require = [
@@ -149,7 +149,7 @@ define aptly::mirror (
   exec { "aptly_mirror_create-${title}":
     command     => "${aptly_cmd} create ${architectures_arg} -with-sources=${with_sources} -with-udebs=${with_udebs}${filter_arg}${filter_with_deps_arg} ${title} ${location} ${release}${components_arg}",
     unless      => "${aptly_cmd} show ${title} >/dev/null",
-    user        => $::aptly::user,
+    user        => $aptly::user,
     require     => $exec_aptly_mirror_create_require,
     environment => $environment,
   }

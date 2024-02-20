@@ -44,7 +44,7 @@ describe 'aptly::mirror' do
                                                                       require: [
                                                                         'Package[aptly]',
                                                                         'File[/etc/aptly.conf]',
-                                                                        'Exec[aptly_mirror_gpg-example]'
+                                                                        'Exec[aptly_mirror_gpg-example]',
                                                                       ])
     }
 
@@ -72,7 +72,7 @@ describe 'aptly::mirror' do
                                                                         require: [
                                                                           'Package[aptly]',
                                                                           'File[/etc/aptly.conf]',
-                                                                          'Exec[aptly_mirror_gpg-example]'
+                                                                          'Exec[aptly_mirror_gpg-example]',
                                                                         ])
       }
     end
@@ -111,7 +111,7 @@ describe 'aptly::mirror' do
                                                                         require: [
                                                                           'Package[aptly]',
                                                                           'File[/etc/aptly.conf]',
-                                                                          'Exec[aptly_mirror_gpg-example]'
+                                                                          'Exec[aptly_mirror_gpg-example]',
                                                                         ])
       }
     end

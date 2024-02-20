@@ -129,7 +129,7 @@ describe 'aptly' do
       end
 
       it {
-        is_expected.to contain_file('/etc/aptly.conf').with_content(<<EOS
+        is_expected.to contain_file('/etc/aptly.conf').with_content(<<EOS,
 {"architectures":["i386","amd64"],"rootDir":"/srv/aptly"}
 EOS
                                                                    )
