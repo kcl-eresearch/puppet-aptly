@@ -100,7 +100,7 @@ define aptly::mirror (
   # $::aptly::key_server will be used as default key server
   # key in hash format
   if is_hash($key) and $key[id] {
-    if is_array($key[id]) {
+    if $key[id] =~ Array {
       $key_string = join($key[id], "' '")
     } elsif is_string($key[id]) or is_integer($key[id]) {
       $key_string = $key[id]
@@ -114,9 +114,9 @@ define aptly::mirror (
     }
 
   # key in string/array format
-  }elsif is_string($key) or is_array($key) {
+  }elsif is_string($key) or $key =~ Array {
     $key_server = $::aptly::key_server
-    if is_array($key) {
+    if $key =~ Array {
       $key_string = join($key, "' '")
     } elsif is_string($key) or is_integer($key) {
       $key_string = $key
