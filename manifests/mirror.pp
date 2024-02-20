@@ -99,7 +99,7 @@ define aptly::mirror (
 
   # $::aptly::key_server will be used as default key server
   # key in hash format
-  if is_hash($key) and $key[id] {
+  if $key =~ Hash and $key[id] {
     if $key[id] =~ Array {
       $key_string = join($key[id], "' '")
     } elsif $key[id] =~ String or $key[id] =~ Integer {
@@ -131,7 +131,7 @@ define aptly::mirror (
       Package['aptly'],
       File['/etc/aptly.conf'],
     ]
-  }else{
+  } else {
     exec { "aptly_mirror_gpg-${title}":
       path    => '/bin:/usr/bin',
       command => "${gpg_cmd} --keyserver '${key_server}' --recv-keys '${key_string}'",
