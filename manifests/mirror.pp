@@ -69,7 +69,7 @@ define aptly::mirror (
   include aptly
 
   $gpg_cmd = "/usr/bin/gpg --no-default-keyring --keyring ${keyring}"
-  $aptly_cmd = "${facts['aptly::aptly_cmd']} mirror"
+  $aptly_cmd = "${aptly::aptly_cmd} mirror"
 
   if empty($architectures) {
     $architectures_arg = ''

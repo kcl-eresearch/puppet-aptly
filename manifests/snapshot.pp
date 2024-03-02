@@ -16,7 +16,7 @@ define aptly::snapshot (
 ) {
   include aptly
 
-  $aptly_cmd = "${facts['aptly::aptly_cmd']} snapshot"
+  $aptly_cmd = "${aptly::aptly_cmd} snapshot"
 
   if $repo and $mirror {
     fail('$repo and $mirror are mutually exclusive.')

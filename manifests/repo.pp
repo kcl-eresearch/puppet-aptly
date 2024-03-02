@@ -28,7 +28,7 @@ define aptly::repo (
 ) {
   include aptly
 
-  $aptly_cmd = "${facts['aptly::aptly_cmd']} repo"
+  $aptly_cmd = "${aptly::aptly_cmd} repo"
 
   if empty($architectures) {
     $architectures_arg = ''
